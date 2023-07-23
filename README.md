@@ -1,6 +1,6 @@
 # genius-fetch
 
-A JS library for fetching data from [Genius](https://genius.com/) . Requires a Genius Access Token for certain functions.
+Fetch data from [Genius](https://genius.com/) . Requires a Genius Access Token for certain functions.
 
 # Installation
 
@@ -11,6 +11,9 @@ npm i genius-fetch --save
 # Initialization
 
 ```
+// ESM
+import Genius from 'genius-fetch';
+// CJS
 const Genius = require('genius-fetch');
 
 const client = new Genius({
@@ -45,17 +48,17 @@ const matchParams = {
   artist: 'Taylor Swift',
 };
 const options = {
-  textFormat: 'plain',
+  textFormat: TextFormat.Plain,
   obtainFullInfo: true
 };
-return client.getSongsByBestMatch(matchParams, options).then(result => {
+return client.getSongsByBestMatch(matchParams, options).then((result) => {
   // Do something with result
 });
 ```
 
 # API
 
-Each function returns a Promise which resolves to the fetched data.
+Each function returns a Promise that resolves to the fetched data.
 
 ## Fetching by ID
 
@@ -68,10 +71,10 @@ Fetches a resource by ID. Requires Genius Access Token.
 
 | Option     | Description                                                    |
 |------------|----------------------------------------------------------------|
-| textFormat | Formatting to apply, where applicable: `html`, `plain` or `dom`. Default: `html`. |
-| raw        | Whether to return raw data. Default `false`.                   |
+| textFormat | Formatting to apply, where applicable: `TextFormat.HTML`, `TextFormat.Plain` or `TextFormat.DOM`. Default: `TextFormat.HTML`. |
+| raw        | Whether to return raw data. Default: `false`.                   |
 
-Returns an object representing the requested resource.
+Returns a Promise that resolves to an object representing the requested resource (i.e., [Song](./docs/api/interfaces/Song.md), [Album](./docs/api/interfaces/Album.md) or [Artist](./docs/api/interfaces/Artist.md)).
 
 ## Fetching by Name
 
@@ -86,15 +89,15 @@ Fetches resources matching `name`. Genius Access Token required if `obtainFullIn
 | limit          | The number of results to return (max: 50). Default: 10.                                                                                                                                                                                                        |
 | offset         | The offset from which to return results. Default: 0 (i.e. return from first record).                                                                                                                                                                           |
 | obtainFullInfo | Whether to fetch full info for each result by calling `get<Song/Album/Artist>ById()`. If `false`, only snippet info will be returned. If `true`, you should make sure you have configured the library with the `accessToken` config option. Default: `false`. |
-| textFormat     | Formatting to apply, where applicable: `html`, `plain` or `dom`. Default: `html`.                                                                                                                                                                              |
+| textFormat     | Formatting to apply, where applicable: `TextFormat.HTML`, `TextFormat.Plain` or `TextFormat.DOM`. Default: `TextFormat.HTML`.                                                                                                                                                                              |
 | raw            | Whether to return raw data. Default `false`.                                                                                                                                                                                                                   |
 
-Returns an object with the following properties:
+Returns a Promise that resolves to an object with the following properties:
 
 | **Property** | **Description**                                         |
 |--------------|---------------------------------------------------------|
 | q            | The name searched.                                      |
-| items        | An array of objects representing the fetched resources. |
+| items        | An array of objects representing the fetched resources (i.e., [Song](./docs/api/interfaces/Song.md), [Album](./docs/api/interfaces/Album.md) or [Artist](./docs/api/interfaces/Artist.md)). |
 | limit        | The number of results requested.                        |
 | offset       | The offset from which results are returned.             |
 
@@ -118,7 +121,7 @@ You **must** specify `name` and *at least* one of `artist` and `album` in `match
 |----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | limit          | The number of results to return (max: 50). Default: 10.                                                                                                                                                                                                        |
 | sampleSize         | The number of songs to fetch for best-matching. If it is smaller than `limit`, it will automatically be set to the same value as `limit`. Default: 20.                                                                                                                                                                           |
-| textFormat     | Formatting to apply, where applicable: `html`, `plain` or `dom`. Default: `html`.                                                                                                                                                                              |
+| textFormat     | Formatting to apply, where applicable: `TextFormat.HTML`, `TextFormat.Plain` or `TextFormat.DOM`. Default: `TextFormat.HTML`.                                                                                                                                                                              |
 | obtainFullInfo* | Whether to fetch full info for each result by calling `getSongById()`. If `false`, only snippet info will be returned. If `true`, you should make sure you have configured the library with the `accessToken` config option. Default: `false`. |
 
 *If `album` is specified in `matchParams`, then `obtainFullInfo` will be overridden with `true`. This is because the best-match logic requires full info to be obtained.
@@ -147,7 +150,7 @@ You **must** specify `name` and *at least* one of the other parameters in `match
 |----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | limit          | The number of results to return (max: 50). Default: 10.                                                                                                                                                                                                        |
 | sampleSize         | The number of albums to fetch for best-matching. If it is smaller than `limit`, it will automatically be set to the same value as `limit`. Default: 20.                                                                                                                                                                           |
-| textFormat     | Formatting to apply, where applicable: `html`, `plain` or `dom`. Default: `html`.                                                                                                                                                                              |
+| textFormat     | Formatting to apply, where applicable: `TextFormat.HTML`, `TextFormat.Plain` or `TextFormat.DOM`. Default: `TextFormat.HTML`.                                                                                                                                                                              |
 | obtainFullInfo* | Whether to fetch full info for each result by calling `getSongById()`. If `false`, only snippet info will be returned. If `true`, you should make sure you have configured the library with the `accessToken` config option. Default: `false`. |
 
 *If `releaseYear`, `releaseMonth` or `releaseDay` is specified in `matchParams`, then `obtainFullInfo` will be overridden with `true`. This is because the best-match logic requires full info to be obtained.
@@ -162,14 +165,33 @@ Convenience function that calls `getAlbumsByBestMatch()` and returns the first r
 
 Parses the contents of the embed link contained in a song resource's `embed` property.
 
-Returns an object with the following properties:
+Returns a Promise that resolves to an object with the following properties:
 
 | **Property** | **Description**                                                    |
 |--------------|--------------------------------------------------------------------|
 | linkElements | Array of \<link\> elements found in the embed content.               |
 | contentParts | Array of HTML elements comprising the 'body' of the embed content. |
 
+# Running the Examples
+
+First, provide your Genius Access Token in `./examples/accessToken.ts`.
+
+Then:
+
+```
+$ npm run example <name of example script (without .ts file extension)>
+```
+
+E.g.
+```
+$ npm run example getSongsByName
+```
+
 # Changelog
+
+1.0.0
+- Migrate to TypeScript
+- Package as ESM + CJS hybrid module
 
 0.1.0
 - Initial release
