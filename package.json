@@ -11,7 +11,7 @@
     "lint": "npx eslint ./src && npx eslint ./examples",
     "lint:fix": "npx eslint ./src --fix && npx eslint ./examples --fix",
     "doc": "npx typedoc",
-    "example": "func() { npx ts-node -P ./tsconfig-esm.json --esm ./examples/${1}.ts; }; func"
+    "example": "func() { npx tsx ./examples/${1}.ts; }; func"
   },
   "main": "./dist/cjs/index-cjs.js",
   "module": "./dist/mjs/index.js",
@@ -49,6 +49,7 @@
     "eslint": "^8.36.0",
     "eslint-plugin-tsdoc": "^0.2.17",
     "ts-node": "^10.9.1",
+    "tsx": "^4.19.2",
     "typedoc": "^0.24.0",
     "typedoc-plugin-markdown": "^3.14.0",
     "typedoc-plugin-rename-defaults": "^0.6.4",
